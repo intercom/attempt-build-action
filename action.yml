@@ -3,6 +3,8 @@ description: 'Attempts to build lots of different languages.'
 runs:
   using: "composite"
   steps:
+    - run: BUNDLE_PATH=~/bundler_cache
+      shell: bash
     - name: Attempt bundle install
       uses: ruby/setup-ruby@v1
       with:
