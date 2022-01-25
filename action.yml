@@ -2,7 +2,6 @@ name: 'Attempt build'
 description: 'Attempts to build lots of different languages.'
 runs:
   using: "composite"
-  continue-on-error: true
   steps:
     - name: Attempt bundle install
       uses: ruby/setup-ruby@v1
@@ -14,12 +13,12 @@ runs:
       with:
         go-version: ^1.9.4
     - name: Attempt go install
-      run: go get ./... && go build
+      run: go get ./... && go build || exit 0
       shell: bash
 
     - uses: actions/setup-node@v2
       with:
         node-version-file: '.nvmrc'
         cache: 'yarn'
-    - run: yarn install --frozen-lockfile
+    - run: yarn install --frozen-lockfile || exit 0
       shell: bash
