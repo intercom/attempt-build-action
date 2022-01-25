@@ -6,10 +6,17 @@ runs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: '.ruby-version'
-    
+        bundler-cache: true
+
+    - uses: actions/setup-go@v2
+      with:
+        go-version: ^1.9.4
+    - run: go get ./... && go build
+      shell: bash
+
     - uses: actions/setup-node@v2
       with:
         node-version-file: '.nvmrc'
-    
-    - run: ${{ github.action_path }}/run_builds.sh
+        cache: 'yarn'
+    - run: yarn install --frozen-lockfile
       shell: bash
