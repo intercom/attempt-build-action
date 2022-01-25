@@ -2,8 +2,10 @@ name: 'Attempt build'
 description: 'Attempts to build lots of different languages.'
 runs:
   using: "composite"
+  continue-on-error: true
   steps:
-    - uses: ruby/setup-ruby@v1
+    - name: Attempt bundle install
+      uses: ruby/setup-ruby@v1
       with:
         ruby-version: '.ruby-version'
         bundler-cache: true
@@ -11,7 +13,8 @@ runs:
     - uses: actions/setup-go@v2
       with:
         go-version: ^1.9.4
-    - run: go get ./... && go build
+    - name: Attempt go install
+      run: go get ./... && go build
       shell: bash
 
     - uses: actions/setup-node@v2
