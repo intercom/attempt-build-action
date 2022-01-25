@@ -3,13 +3,12 @@ description: 'Attempts to build lots of different languages.'
 runs:
   using: "composite"
   steps:
-    - run: export BUNDLE_PATH=~/bundler_cache
-      shell: bash
     - name: Attempt bundle install
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: '.ruby-version'
         bundler-cache: true
+        cache-version: 1
 
     - uses: actions/setup-go@v2
       with:
