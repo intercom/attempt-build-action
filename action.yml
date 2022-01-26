@@ -10,6 +10,7 @@ runs:
   steps:
     - name: Set ruby version
       run: echo "RUBY_VERSION=$(cat .ruby-version || echo ${{ inputs.default-ruby-version }})"  >> $GITHUB_ENV
+      shell: bash
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
@@ -25,6 +26,7 @@ runs:
       run: |
         bundle install --jobs 4 --retry 3 --path ~/bundler_cache || exit 0
       if: steps.cache-ruby-dependencies.outputs.cache-hit != 'true'
+      shell: bash
 
     - uses: actions/setup-go@v2
       if: ${{ success() }}
