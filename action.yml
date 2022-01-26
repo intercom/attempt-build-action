@@ -55,3 +55,10 @@ runs:
       run: yarn install --frozen-lockfile || exit 0
       if: steps.cache-yarn-dependencies.outputs.cache-hit != 'true'
       shell: bash
+
+    - uses: actions/setup-go@v2
+      with:
+        go-version: 1.14.2
+    - name: Attempt go build
+      run: go build || exit 0
+      shell: bash
