@@ -1,20 +1,37 @@
 name: 'Attempt build'
 description: 'Attempts to build lots of different languages.'
+inputs:
+  default-ruby-version:  # id of input
+    description: 'The ruby version to use if there is no .ruby-version file'
+    required: false
+    default: 2.6.5
 runs:
   using: "composite"
   steps:
-    - name: Attempt bundle install
-      uses: ruby/setup-ruby@v1
+    - name: Set ruby version
+      run: echo "RUBY_VERSION=$(cat .ruby-version || echo ${{ inputs.default-ruby-version }})"  >> $GITHUB_ENV
+    - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '.ruby-version'
-        bundler-cache: true
-        cache-version: 1
+        ruby-version: ${{ env.RUBY_VERSION }}
+    - name: Cache ruby dependencies
+      id: cache-ruby-dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/bundler_cache
+        key: ${{ runner.os }}-gems-${{ env.RUBY_VERSION }}-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-${{ env.RUBY_VERSION }}-
+    - name: Attempt bundle install if cache miss
+      run: |
+        bundle install --jobs 4 --retry 3 --path ~/bundler_cache || exit 0
+      if: steps.cache-ruby-dependencies.outputs.cache-hit != 'true'
 
     - uses: actions/setup-go@v2
+      if: ${{ success() }}
       with:
         go-version: ^1.9.4
     - name: Attempt go install
-      run: go get ./... && go build || exit 0
+      run: go install || exit 0
       shell: bash
 
     - uses: actions/setup-node@v2
