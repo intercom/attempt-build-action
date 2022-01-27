@@ -73,8 +73,3 @@ runs:
         java-version: ${{ inputs.default-java-version }}
         distribution: adopt
         cache: 'gradle'
-    - name: Attempt gradlew build
-      run: |
-        ./script/circle-setup || exit 0
-        ./gradlew assembleDebug || exit 0
-      shell: bash
