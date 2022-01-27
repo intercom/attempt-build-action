@@ -9,6 +9,10 @@ inputs:
     description: 'The node version to use if there is no .nvmrc file'
     required: false
     default: 14.15.0
+  default-java-version:
+    description: 'Version of Java to use when attempting to build Java'
+    required: false
+    default: 11
 runs:
   using: "composite"
   steps:
@@ -58,7 +62,17 @@ runs:
 
     - uses: actions/setup-go@v2
       with:
-        go-version: 1.14.2
+        go-version: ^1.14.2
     - name: Attempt go build
       run: go build || exit 0
+      shell: bash
+
+    - name: Setup JDK ${{ inputs.default-java-version }}
+      uses: actions/setup-java@v2
+      with:
+        java-version: ${{ inputs.default-java-version }}
+        distribution: adopt
+        cache: 'gradle'
+    - name: Attempt gradlew build
+      run: ./gradlew assembleDebug
       shell: bash
