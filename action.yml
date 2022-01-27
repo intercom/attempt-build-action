@@ -75,8 +75,6 @@ runs:
         cache: 'gradle'
     - name: Attempt gradlew build
       run: |
-        echo 'build_folio=true' >> user.properties
-        echo 'build_pethotel=true' >> user.properties
-        echo 'build_sandbox=true' >> user.properties
+        ./script/circle-setup || exit 0
         ./gradlew assembleDebug || exit 0
       shell: bash
