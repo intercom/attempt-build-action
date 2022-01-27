@@ -75,8 +75,8 @@ runs:
         cache: 'gradle'
     - name: Attempt gradlew build
       run: |
-        if [ ! -e user.properties ]; then 
-          touch user.properties
-        fi
+        echo 'build_folio=true' >> user.properties
+        echo 'build_pethotel=true' >> user.properties
+        echo 'build_sandbox=true' >> user.properties
         ./gradlew assembleDebug || exit 0
       shell: bash
