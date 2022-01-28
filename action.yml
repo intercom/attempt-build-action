@@ -66,10 +66,3 @@ runs:
     - name: Attempt go build
       run: go build || exit 0
       shell: bash
-
-    - name: Setup JDK ${{ inputs.default-java-version }}
-      uses: actions/setup-java@v2
-      with:
-        java-version: ${{ inputs.default-java-version }}
-        distribution: adopt
-        cache: 'gradle'
