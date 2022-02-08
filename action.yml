@@ -19,7 +19,6 @@ runs:
     - name: Set ruby version
       run: echo "RUBY_VERSION=$(cat .ruby-version || echo ${{ inputs.default-ruby-version }})"  >> $GITHUB_ENV
       shell: bash
-      if: always()
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
@@ -44,6 +43,7 @@ runs:
     - uses: actions/setup-node@v2
       with:
         node-version: ${{ env.NODE_VERSION }}
+      if: always()
     - name: Get Yarn cache path
       id: yarn-cache-dir-path
       run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -70,14 +70,17 @@ runs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         cache: 'pip'
+      if: always()
     - name: Pip install
       run: pip install || exit 0
       shell: bash
+      if: always()
 
     - uses: actions/setup-go@v2
       if: always()
       with:
         go-version: ^1.14.2
     - name: Attempt go build
+      if: always()
       run: go build || exit 0
       shell: bash
