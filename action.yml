@@ -60,13 +60,6 @@ runs:
       if: steps.cache-yarn-dependencies.outputs.cache-hit != 'true'
       shell: bash
 
-    - uses: actions/setup-go@v2
-      with:
-        go-version: ^1.14.2
-    - name: Attempt go build
-      run: go build || exit 0
-      shell: bash
-
     - name: Set Python version
       run: echo "PYTHON_VERSION=$(cat .python-version || echo ${{ inputs.default-python-version }})"  >> $GITHUB_ENV
       shell: bash
@@ -76,4 +69,11 @@ runs:
         cache: 'pip'
     - name: Pip install
       run: pip install || exit 0
+      shell: bash
+
+    - uses: actions/setup-go@v2
+      with:
+        go-version: ^1.14.2
+    - name: Attempt go build
+      run: go build || exit 0
       shell: bash
