@@ -9,10 +9,10 @@ inputs:
     description: 'The node version to use if there is no .nvmrc file'
     required: false
     default: 14.15.0
-  default-java-version:
-    description: 'Version of Java to use when attempting to build Java'
+  default-python-version:
+    description: 'Version of Python to use if there is no .python-version file'
     required: false
-    default: 11
+    default: '3.x'
 runs:
   using: "composite"
   steps:
@@ -65,4 +65,15 @@ runs:
         go-version: ^1.14.2
     - name: Attempt go build
       run: go build || exit 0
+      shell: bash
+
+    - name: Set Python version
+      run: echo "PYTHON_VERSION=$(cat .python-version || echo ${{ inputs.default-python-version }})"  >> $GITHUB_ENV
+      shell: bash
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    - name: Pip install
+      run: pip install || exit 0
       shell: bash
